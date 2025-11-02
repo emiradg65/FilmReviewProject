@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Search Results</title> 
+
+  <style>
+    /* Sayfa genel stili */
+    body {
+      background-color: #1e1e1e; 
+      color: #f5f5f5; 
+      font-family: Arial, sans-serif;
+      padding: 40px;
+    }
+
+    
+    .container {
+      max-width: 800px;
+      margin: auto;
+    }
+
+    
+    .movie {
+      background-color: #2a2a2a;
+      padding: 20px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+    }
+
+    
+    .movie-title {
+      font-size: 20px;
+      font-weight: bold;
+      color: #f5c518; /* IMDb sarısı */
+      margin-bottom: 8px;
+    }
+
+    
+    .movie-description {
+      color: #ccc;
+    }
+
+    
+    a {
+      color: #f5c518;
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+
+<body>
+
+<!-- Sayfa içeriği -->
+<div class="container">
+  
+  <h1>Search Results for "{{ query }}"</h1>
+
+  
+  {% if search_results %}
+    {% for movie in search_results %}
+      <div class="movie">
+     
+        <div class="movie-title">
+          <a href="/movie/{{ movie[0] }}">{{ movie[1] }} ({{ movie[2] }})</a>
+        </div>
+
+        <div class="movie-description">
+           IMDb: {{ movie[3] }} <br>
+           {{ movie[4] }}
+        </div>
+      </div>
+    {% endfor %}
+
+  
+  {% else %}
+    <p>No movies found matching your search.</p>
+  {% endif %}
+
+  
+  <div style="text-align:center; margin-top: 30px;">
+    <a href="/dashboard">← Back to Dashboard</a>
+  </div>
+</div>
+
+</body>
+</html>

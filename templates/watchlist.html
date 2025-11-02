@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>My Watchlist</title> 
+
+  <style>
+    /* saayfanın genel görünümü */
+    body {
+      background-color: #1e1e1e; 
+      color: #f5f5f5; 
+      font-family: Arial, sans-serif;
+      padding: 40px;
+    }
+
+    /* Her bir film kutusu */
+    .movie {
+      background-color: #2c2c2c; 
+      padding: 20px;
+      margin: 20px auto;
+      border-radius: 8px;
+      max-width: 600px; 
+    }
+
+    
+    a {
+      color: #f5c518; 
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline; 
+    }
+
+    
+    h1 {
+      text-align: center;
+      color: #f5c518;
+    }
+  </style>
+</head>
+
+<body>
+
+<!-- Sayfa başlığı -->
+<h1> My Watchlist</h1>
+
+<!-- Eğer izleme listesinde film varsa -->
+{% if watchlist_movies %}
+  {% for movie in watchlist_movies %}
+    <div class="movie">
+      <!-- Film adı ve yılı -->
+      <h2>{{ movie[1] }} ({{ movie[2] }})</h2>
+
+      <!-- IMDb puanı -->
+      <p>⭐ IMDb: {{ movie[3] }}</p>
+
+      <!-- izleme listesinden çıkarma bağlantısı -->
+      <a href="/remove_from_watchlist/{{ movie[0] }}">Remove from Watchlist</a>
+    </div>
+  {% endfor %}
+
+<!-- eğer ki kullanıcının listesi boşsa -->
+{% else %}
+  <p style="text-align:center;">Your Whatchlist is empty</p>
+{% endif %}
+
+<!-- ana sayfaya dashboarda dönüş bağlantısı -->
+<div style="text-align:center; margin-top:30px;">
+  <a href="/dashboard">← Back to Dashboard</a>
+</div>
+
+</body>
+</html>

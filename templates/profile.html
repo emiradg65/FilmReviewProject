@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Profile Update</title> 
+
+  <style>
+    /* Genel sayfa stili */
+    body {
+      background-color: #1e1e1e; 
+      color: #f5f5f5; 
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh; 
+    }
+
+    /* Form kutusu */
+    .form-container {
+      background-color: #2c2c2c; 
+      padding: 30px;
+      border-radius: 10px; 
+      width: 350px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.5); 
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
+      color: #f5c518; 
+    }
+
+    /* Etiketler */
+    label {
+      display: block;
+      margin-top: 15px;
+      font-size: 14px;
+    }
+
+    /* Giriş kutuları */
+    input {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      background-color: #1a1a1a; 
+      border: none;
+      border-radius: 5px;
+      color: #eee;
+    }
+
+    /* Buton stili */
+    button {
+      width: 100%;
+      margin-top: 20px;
+      padding: 12px;
+      background-color: #f5c518;
+      border: none;
+      color: black;
+      font-weight: bold;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #e6b800;
+    }
+
+    /* Bilgilendirme mesajları */
+    .message {
+      text-align: center;
+      margin-top: 10px;
+      font-size: 14px;
+    }
+  </style>
+</head>
+
+<body>
+
+<!-- Form kutusunu saran ana div -->
+<div class="form-container">
+  <h2>Update Profile</h2> 
+
+  <!-- Profil güncelleme formu -->
+  <form method="POST">
+    
+    <label for="age">Age:</label>
+    <input type="number" id="age" name="age" value="{{ user[4] }}" required>
+
+    
+    <label for="country">Country:</label>
+    <input type="text" id="country" name="country" value="{{ user[5] }}" required>
+
+    
+    <label for="password">New Password:</label>
+    <input type="password" id="password" name="password" placeholder="Leave empty if no change">
+
+    
+    <button type="submit">Update Profile</button>
+  </form>
+
+  <!-- güncelleme başarılı/başarısız bildirimleri -->
+  <div class="message">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="alert alert-{{ category }}">{{ message }}</div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+  </div>
+
+</div>
+
+</body>
+</html>

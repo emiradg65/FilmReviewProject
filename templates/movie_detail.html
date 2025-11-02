@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Film Details</title> 
+
+  <style>
+    /* Genel sayfa stili */
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #1e1e1e; 
+      color: #eee;
+      padding: 40px;
+    }
+
+    
+    .container {
+      max-width: 800px;
+      margin: auto;
+      background-color: #2c2c2c;
+      padding: 20px;
+      border-radius: 10px;
+    }
+
+    /* Başlıklar ve paragraflar */
+    h1 {
+      color: #f5c518; 
+      margin-bottom: 20px;
+    }
+
+    p {
+      margin: 10px 0;
+      color: #ccc;
+    }
+
+    a {
+      display: inline-block;
+      margin-top: 20px;
+      color: #f5c518;
+      text-decoration: none;
+    }
+
+    /* yorum bırakma bölümü */
+    form {
+      margin-top: 30px;
+    }
+
+    input, textarea {
+      width: 100%;
+      margin-bottom: 10px;
+      padding: 10px;
+      background-color: #1a1a1a;
+      border: none;
+      border-radius: 5px;
+      color: #eee;
+    }
+
+    button {
+      width: 100%;
+      padding: 10px;
+      background-color: #f5c518;
+      color: black;
+      font-weight: bold;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #e6b800;
+    }
+
+    /* Kullanıcı yorum kutuları */
+    .review {
+      background-color: #1a1a1a;
+      padding: 10px;
+      margin-top: 20px;
+      border-radius: 5px;
+    }
+
+    /*  başarı veya hata mesajları */
+    .alert {
+      padding: 10px;
+      margin-bottom: 20px;
+      border-radius: 5px;
+      text-align: center;
+    }
+
+    .alert-success {
+      background-color: #d4edda;
+      color: #155724;
+    }
+
+    .alert-danger {
+      background-color: #f8d7da;
+      color: #721c24;
+    }
+
+    small {
+      color: #999;
+      font-size: 12px;
+    }
+  </style>
+</head>
+
+<body>
+
+<!-- Tüm içeriği saran kutu -->
+<div class="container">
+
+  <!-- Başarılı işlem mesajlarını göstermek için (Flask flash mesajları) -->
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      {% for category, message in messages %}
+        <div class="alert alert-{{ category }}">
+          {{ message }}
+        </div>
+      {% endfor %}
+    {% endif %}
+  {% endwith %}
+
+  <!-- Filmin başlığı ve yılı -->
+  <h1>{{ movie[1] }} ({{ movie[2] }})</h1>
+
+  <!-- Filmin detay bilgileri -->
+  <p><strong> Certificate:</strong> {{ movie[3] }}</p>
+  <p><strong> Runtime:</strong> {{ movie[4] }} min</p>
+  <p><strong> Genre:</strong> {{ movie[5] }}</p>
+  <p><strong> IMDb Rating:</strong> {{ movie[6] }}/10</p>
+  <p><strong> Overview:</strong> {{ movie[7] }}</p>
+  <p><strong> Meta Score:</strong> {{ movie[8] }}</p>
+  <p><strong> Director:</strong> {{ movie[9] }}</p>
+
+  <!-- Oyuncular -->
+  <p><strong> Stars:</strong><br> 
+    - {{ movie[10] }}<br> 
+    - {{ movie[11] }}<br> 
+    - {{ movie[12] }}<br> 
+    - {{ movie[13] }}
+  </p>
+
+  <p><strong> Total Votes:</strong> {{ movie[14] }}</p>
+  <p><strong> Gross:</strong> {{ movie[15] }}</p>
+
+  <!-- Ana sayfaya dönüş bağlantısı -->
+  <a href="/dashboard">← Back to Dashboard</a>
+
+  <!-- Kullanıcının yeni bir yorum bırakabileceği form -->
+  <h2 style="margin-top: 30px;">Leave a Review</h2>
+  <form action="/movie/{{ movie[0] }}" method="POST">
+    <textarea name="comment" placeholder="Write your comment..." required></textarea>
+    <input type="number" name="rating" min="1" max="10" placeholder="Rating (1-10)" required>
+    <button type="submit">Submit Review</button>
+  </form>
+
+  <!-- Mevcut yorumlar listesi -->
+  <h2 style="margin-top: 40px;">Reviews</h2>
+  {% for review in reviews %}
+  <div class="review">
+    <strong>{{ review[0] }}</strong> ({{ review[2] }}⭐)<br> 
+    {{ review[1] }}<br> 
+    <small> {{ review[3] }}</small> 
+  </div>
+  {% else %}
+  <p>No reviews yet.</p> 
+  {% endfor %}
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CineHub - Your Movie Database</title>
+  
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
+      min-height: 100vh;
+      color: #fff;
+    }
+
+    /* Sidebar Navigation */
+    .sidebar {
+      position: fixed;
+      left: 0;
+      top: 0;
+      height: 100vh;
+      width: 260px;
+      background: rgba(30, 30, 30, 0.95);
+      backdrop-filter: blur(10px);
+      padding: 30px 20px;
+      z-index: 1000;
+      box-shadow: 4px 0 20px rgba(0,0,0,0.3);
+      transition: all 0.3s ease;
+    }
+
+    .logo-container {
+      text-align: center;
+      margin-bottom: 40px;
+      padding-bottom: 25px;
+      border-bottom: 2px solid rgba(245, 197, 24, 0.3);
+    }
+
+    .logo-container h1 {
+      font-size: 32px;
+      font-weight: 700;
+      background: linear-gradient(45deg, #f5c518, #ffd700);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      letter-spacing: 2px;
+    }
+
+    .logo-container p {
+      color: #888;
+      font-size: 12px;
+      margin-top: 5px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+    }
+
+    .nav-links {
+      list-style: none;
+    }
+
+    .nav-links li {
+      margin-bottom: 10px;
+    }
+
+    .nav-links a {
+      display: flex;
+      align-items: center;
+      padding: 14px 20px;
+      color: #ddd;
+      text-decoration: none;
+      border-radius: 12px;
+      transition: all 0.3s ease;
+      font-weight: 500;
+    }
+
+    .nav-links a i {
+      margin-right: 12px;
+      font-size: 18px;
+      width: 25px;
+    }
+
+    .nav-links a:hover {
+      background: linear-gradient(135deg, #f5c518, #ffd700);
+      color: #000;
+      transform: translateX(5px);
+    }
+
+    .nav-links a.active {
+      background: linear-gradient(135deg, #f5c518, #ffd700);
+      color: #000;
+    }
+
+    /* Main Content */
+    .main-content {
+      margin-left: 260px;
+      padding: 0;
+    }
+
+    /* Header */
+    .header {
+      background: rgba(20, 20, 20, 0.9);
+      backdrop-filter: blur(10px);
+      padding: 20px 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+      position: sticky;
+      top: 0;
+      z-index: 999;
+    }
+
+    .search-bar {
+      flex: 1;
+      max-width: 500px;
+      position: relative;
+    }
+
+    .search-bar form {
+      display: flex;
+      gap: 10px;
+    }
+
+    .search-bar input {
+      flex: 1;
+      padding: 12px 20px 12px 45px;
+      background: rgba(255,255,255,0.1);
+      border: 2px solid rgba(245, 197, 24, 0.3);
+      border-radius: 25px;
+      color: #fff;
+      font-size: 14px;
+      transition: all 0.3s ease;
+    }
+
+    .search-bar input:focus {
+      outline: none;
+      border-color: #f5c518;
+      background: rgba(255,255,255,0.15);
+    }
+
+    .search-bar i {
+      position: absolute;
+      left: 18px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #888;
+    }
+
+    .search-bar button {
+      padding: 12px 30px;
+      background: linear-gradient(135deg, #f5c518, #ffd700);
+      border: none;
+      border-radius: 25px;
+      color: #000;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .search-bar button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 20px rgba(245, 197, 24, 0.4);
+    }
+
+    .user-section {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .user-dropdown {
+      position: relative;
+    }
+
+    .user-button {
+      background: rgba(255,255,255,0.1);
+      border: 2px solid rgba(245, 197, 24, 0.5);
+      padding: 10px 20px;
+      border-radius: 25px;
+      color: #f5c518;
+      font-weight: 500;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      transition: all 0.3s ease;
+    }
+
+    .user-button:hover {
+      background: rgba(245, 197, 24, 0.2);
+      border-color: #f5c518;
+    }
+
+    .dropdown-menu {
+      display: none;
+      position: absolute;
+      top: 60px;
+      right: 0;
+      background: rgba(30, 30, 30, 0.98);
+      backdrop-filter: blur(10px);
+      min-width: 200px;
+      border-radius: 15px;
+      padding: 10px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+      border: 1px solid rgba(245, 197, 24, 0.2);
+    }
+
+    .user-dropdown:hover .dropdown-menu {
+      display: block;
+      animation: fadeIn 0.3s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .dropdown-menu a {
+      display: flex;
+      align-items: center;
+      padding: 12px 15px;
+      color: #ddd;
+      text-decoration: none;
+      border-radius: 10px;
+      transition: all 0.3s ease;
+    }
+
+    .dropdown-menu a i {
+      margin-right: 10px;
+      width: 20px;
+    }
+
+    .dropdown-menu a:hover {
+      background: rgba(245, 197, 24, 0.2);
+      color: #f5c518;
+    }
+
+    .login-buttons {
+      display: flex;
+      gap: 15px;
+    }
+
+    .login-buttons a {
+      padding: 10px 25px;
+      border-radius: 25px;
+      text-decoration: none;
+      font-weight: 500;
+      transition: all 0.3s ease;
+    }
+
+    .login-buttons .btn-login {
+      background: transparent;
+      border: 2px solid #f5c518;
+      color: #f5c518;
+    }
+
+    .login-buttons .btn-login:hover {
+      background: rgba(245, 197, 24, 0.1);
+    }
+
+    .login-buttons .btn-register {
+      background: linear-gradient(135deg, #f5c518, #ffd700);
+      color: #000;
+      border: none;
+    }
+
+    .login-buttons .btn-register:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 20px rgba(245, 197, 24, 0.4);
+    }
+
+    /* Flash Messages */
+    .flash-messages {
+      margin: 20px 40px;
+    }
+
+    .alert {
+      padding: 15px 20px;
+      border-radius: 12px;
+      margin-bottom: 15px;
+      display: flex;
+      align-items: center;
+      animation: slideIn 0.5s ease;
+    }
+
+    @keyframes slideIn {
+      from { transform: translateX(-100%); opacity: 0; }
+      to { transform: translateX(0); opacity: 1; }
+    }
+
+    .alert i {
+      margin-right: 15px;
+      font-size: 20px;
+    }
+
+    .alert-success {
+      background: rgba(76, 175, 80, 0.2);
+      border-left: 4px solid #4caf50;
+      color: #4caf50;
+    }
+
+    .alert-danger {
+      background: rgba(244, 67, 54, 0.2);
+      border-left: 4px solid #f44336;
+      color: #f44336;
+    }
+
+    .alert-info {
+      background: rgba(33, 150, 243, 0.2);
+      border-left: 4px solid #2196f3;
+      color: #2196f3;
+    }
+
+    /* Content Section */
+    .content {
+      padding: 40px;
+    }
+
+    .section-header {
+      margin-bottom: 30px;
+    }
+
+    .section-header h2 {
+      font-size: 32px;
+      font-weight: 600;
+      margin-bottom: 10px;
+    }
+
+    .section-header p {
+      color: #888;
+      font-size: 16px;
+    }
+
+    /* Movie Cards Grid */
+    .movies-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+      gap: 30px;
+      margin-top: 30px;
+    }
+
+    .movie-card {
+      background: rgba(30, 30, 30, 0.6);
+      backdrop-filter: blur(10px);
+      border-radius: 20px;
+      padding: 25px;
+      border: 1px solid rgba(255,255,255,0.1);
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+
+    .movie-card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 15px 40px rgba(245, 197, 24, 0.3);
+      border-color: rgba(245, 197, 24, 0.5);
+    }
+
+    .movie-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 15px;
+    }
+
+    .movie-title {
+      flex: 1;
+    }
+
+    .movie-title a {
+      color: #fff;
+      text-decoration: none;
+      font-size: 20px;
+      font-weight: 600;
+      display: block;
+      margin-bottom: 5px;
+      transition: color 0.3s ease;
+    }
+
+    .movie-title a:hover {
+      color: #f5c518;
+    }
+
+    .movie-year {
+      color: #888;
+      font-size: 14px;
+    }
+
+    .movie-rating {
+      background: linear-gradient(135deg, #f5c518, #ffd700);
+      color: #000;
+      padding: 8px 15px;
+      border-radius: 10px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .movie-description {
+      color: #bbb;
+      font-size: 14px;
+      line-height: 1.6;
+      margin-bottom: 20px;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .movie-actions {
+      display: flex;
+      gap: 10px;
+    }
+
+    .btn-watchlist {
+      flex: 1;
+      padding: 12px;
+      background: rgba(245, 197, 24, 0.1);
+      border: 2px solid #f5c518;
+      color: #f5c518;
+      border-radius: 12px;
+      text-decoration: none;
+      text-align: center;
+      font-weight: 500;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .btn-watchlist:hover {
+      background: #f5c518;
+      color: #000;
+    }
+
+    .login-prompt {
+      color: #666;
+      font-size: 13px;
+      text-align: center;
+      padding: 10px;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 968px) {
+      .sidebar {
+        transform: translateX(-100%);
+      }
+
+      .main-content {
+        margin-left: 0;
+      }
+
+      .movies-grid {
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 20px;
+      }
+
+      .header {
+        flex-direction: column;
+        gap: 20px;
+      }
+
+      .search-bar {
+        max-width: 100%;
+      }
+    }
+
+    /* Empty State */
+    .empty-state {
+      text-align: center;
+      padding: 60px 20px;
+      color: #666;
+    }
+
+    .empty-state i {
+      font-size: 80px;
+      margin-bottom: 20px;
+      color: #444;
+    }
+
+    .empty-state h3 {
+      font-size: 24px;
+      margin-bottom: 10px;
+    }
+  </style>
+</head>
+
+<body>
+
+<!-- Sidebar Navigation -->
+<div class="sidebar">
+  <div class="logo-container">
+    <h1><i class="fas fa-film"></i> CINEHUB</h1>
+    <p>Your Movie Database</p>
+  </div>
+
+  <ul class="nav-links">
+    <li><a href="/dashboard" class="active"><i class="fas fa-home"></i> Home</a></li>
+    <li><a href="/watchlist"><i class="fas fa-bookmark"></i> Watchlist</a></li>
+    <li><a href="/add_movie"><i class="fas fa-plus-circle"></i> Add Movie</a></li>
+    {% if session.get('user_email') %}
+      <li><a href="/my_reviews"><i class="fas fa-star"></i> My Reviews</a></li>
+      <li><a href="/profile"><i class="fas fa-user-circle"></i> Profile</a></li>
+      <li><a href="/logout"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+    {% endif %}
+  </ul>
+</div>
+
+<!-- Main Content -->
+<div class="main-content">
+  <!-- Header -->
+  <div class="header">
+    <div class="search-bar">
+      <form action="/search" method="GET">
+        <i class="fas fa-search"></i>
+        <input type="text" name="query" placeholder="Search movies, actors, directors..." required>
+        <button type="submit"><i class="fas fa-search"></i> Search</button>
+      </form>
+    </div>
+
+    <div class="user-section">
+      {% if session.get('user_email') %}
+        <div class="user-dropdown">
+          <button class="user-button">
+            <i class="fas fa-user-circle"></i>
+            {{ session['user_email'].split('@')[0] }}
+            <i class="fas fa-chevron-down"></i>
+          </button>
+          <div class="dropdown-menu">
+            <a href="/watchlist"><i class="fas fa-bookmark"></i> Watchlist</a>
+            <a href="/my_reviews"><i class="fas fa-star"></i> My Reviews</a>
+            <a href="/profile"><i class="fas fa-user-edit"></i> Edit Profile</a>
+            <a href="/logout"><i class="fas fa-sign-out-alt"></i> Logout</a>
+          </div>
+        </div>
+      {% else %}
+        <div class="login-buttons">
+          <a href="/login" class="btn-login">Login</a>
+          <a href="/register" class="btn-register">Sign Up</a>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+
+  <!-- Flash Messages -->
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      <div class="flash-messages">
+        {% for category, message in messages %}
+          <div class="alert alert-{{ category }}">
+            {% if category == 'success' %}
+              <i class="fas fa-check-circle"></i>
+            {% elif category == 'danger' %}
+              <i class="fas fa-exclamation-circle"></i>
+            {% else %}
+              <i class="fas fa-info-circle"></i>
+            {% endif %}
+            {{ message }}
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+  {% endwith %}
+
+  <!-- Content -->
+  <div class="content">
+    <div class="section-header">
+      <h2>🎬 Discover Movies</h2>
+      <p>Explore our collection of amazing films</p>
+    </div>
+
+    {% if movies %}
+      <div class="movies-grid">
+        {% for movie in movies %}
+          <div class="movie-card">
+            <div class="movie-header">
+              <div class="movie-title">
+                <a href="/movie/{{ movie[0] }}">{{ movie[1] }}</a>
+                <span class="movie-year">{{ movie[2] }}</span>
+              </div>
+              <div class="movie-rating">
+                <i class="fas fa-star"></i>
+                {{ movie[3] }}
+              </div>
+            </div>
+
+            <div class="movie-description">
+              {{ movie[4] if movie[4] else "No description available." }}
+            </div>
+
+            <div class="movie-actions">
+              {% if session.get('user_email') %}
+                <a href="/add_to_watchlist/{{ movie[0] }}" class="btn-watchlist">
+                  <i class="fas fa-plus"></i>
+                  Add to Watchlist
+                </a>
+              {% else %}
+                <div class="login-prompt">
+                  <i class="fas fa-lock"></i> Login to add to watchlist
+                </div>
+              {% endif %}
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <div class="empty-state">
+        <i class="fas fa-film"></i>
+        <h3>No Movies Found</h3>
+        <p>Start by adding some movies to the database!</p>
+      </div>
+    {% endif %}
+  </div>
+</div>
+
+</body>
+</html>
